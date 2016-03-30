@@ -1,0 +1,79 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+ <head>
+ <meta charset="utf-8" />
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.5/react.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.5/react-dom.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
+ <link rel='stylesheet' href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css" />
+ </head>
+ <body>
+   <div id='content' class='container'>
+   </div>
+   <script type='text/babel'>
+     class Board extends React.Component{
+       constructor(props) {
+         super(props);
+         this.state = { notes: [], complete: 0, nextID: 0 };
+         this.addNote = this.addNote.bind(this);
+         this.notes = this.notes.bind(this);
+         this.deleteNote = this.deleteNote.bind(this);
+       }
+
+       notes(){
+         let notes = [];
+         this.state.notes.map( note => {
+           notes.push(
+             <div className="col s12 m6">
+                 <div className="card yellow lighten-3 ">
+                   <div className="card-content dark-grey-text">
+                     {note.name}
+                   </div>
+                 </div>
+               </div>);
+         });
+         return notes;
+       }
+
+       addNote(e){
+         e.preventDefault();
+         let notes = this.state.notes;
+         notes.unshift({ name: this.refs.name.value });
+         this.refs.name.value = null;
+         this.setState({ notes: notes, nextID: this.nextID(this.state.nextID) });
+       }
+
+       deleteNote(id){
+         let noteArray = this.state.notes;
+         let index = noteArray.findIndex( x => x.id === id );
+       }
+
+       nextID(id){
+         return id += 1;
+       }
+
+       render(){
+   return(
+     <div className='center'>
+            <h1>The Sticky Notes </h1>
+            <hr />
+            <form onSubmit={this.addNote}>
+              <input placeholder='add note' type='text' ref='name' />
+            <div className="col m3">
+              <div className="row">
+                {this.notes()}
+              </div>
+            </div>
+            </form>
+          </div>);
+
+       }
+     }
+     ReactDOM.render(<Board />, document.getElementById('content'));
+   </script>
+  </body>
+</html>
